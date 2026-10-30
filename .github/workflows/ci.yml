@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  simulator:
+    name: Simulator build and tests
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build for the simulator
+        run: ./build.sh sim
+      - name: Run tests
+        run: tests/run.sh
+  device:
+    name: iOS 6 device build (armv7)
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch the iOS 9.3 SDK stubs
+        run: tools/setup-sdk.sh .sdk | tail -1 | sed -e 's/^export //' -e 's/"//g' >> "$GITHUB_ENV"
+      - name: Build the unsigned IPA
+        run: ./build.sh device
+      - uses: actions/upload-artifact@v4
+        with:
+          name: RedditReader.ipa
+          path: build/RedditReader.ipa
