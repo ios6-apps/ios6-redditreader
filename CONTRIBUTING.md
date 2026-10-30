@@ -26,3 +26,10 @@ Installing the unsigned IPA needs a device that accepts unsigned apps (a jailbre
 ## Reporting bugs
 
 Please include the device model, iOS version and whether it is jailbroken, plus what you expected to happen.
+
+## Releases
+
+CI (`.github/workflows/ci.yml`) builds and tests every push to `main`. On `main` it then publishes the unsigned IPA twice: to a rolling `nightly` pre-release
+(replaced each time) and, if `CFBundleShortVersionString` in `Info.plist` has no release yet, to a new versioned release `vX.Y.Z`.
+To ship a version: raise `CFBundleShortVersionString` in `Info.plist`, add a `## [X.Y.Z] - date` section to `CHANGELOG.md` (its text becomes the release notes), and merge to `main`.
+`CFBundleVersion` is set to the CI run number at build time; do not edit it by hand. Versions starting with `0.` are published as pre-releases.

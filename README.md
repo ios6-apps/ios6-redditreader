@@ -28,6 +28,15 @@ Certificates and host names are verified.
 - Star a post to save it on the device; the Saved list works without a network (swipe a row to remove it).
 - Requests go through one queue that respects Reddit's rate limit (see below) and the answers are cached on disk for a while.
 
+## Download
+
+Every push to `main` is built by GitHub Actions. Get the unsigned IPA from the [Releases page](../../releases):
+
+- [latest versioned release](../../releases/latest) - the stable one (versions follow [Semantic Versioning](https://semver.org/), see [CHANGELOG.md](CHANGELOG.md));
+- the [`nightly` pre-release](../../releases/tag/nightly) - the newest build of `main`, replaced on every push.
+
+The IPA is unsigned: install it on an iOS 6 device that has AppSync Unified, e.g. `ideviceinstaller -i RedditReader-<version>.ipa`. A `.sha256` file sits next to each IPA.
+
 ## Requirements
 
 - To run it: an iOS 6 device (written and tried on an iPhone 5 with iOS 6.1.3) that can install unsigned apps, i.e. jailbroken with

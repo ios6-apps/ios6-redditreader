@@ -25,6 +25,7 @@ if [ "$1" = device ]; then
         -framework UIKit -framework Foundation -framework CoreGraphics -framework QuartzCore -framework ImageIO -framework MediaPlayer -framework AssetsLibrary -framework MobileCoreServices -undefined dynamic_lookup \
         "${OBJS[@]}" -o build/device/Payload/RedditReader.app/RedditReader
     cp Info.plist res/*.png res/cacert.pem build/device/Payload/RedditReader.app/
+    cp LICENSE THIRD_PARTY_NOTICES.md build/device/Payload/RedditReader.app/
     (cd build/device && zip -q -r ../RedditReader.ipa Payload)
     echo "built build/RedditReader.ipa"
 else

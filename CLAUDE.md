@@ -39,6 +39,10 @@ CI (`.github/workflows/ci.yml`) runs the simulator build and the tests on macOS,
 
 See the project layout table in `README.md`. Sources are in `src/`, drawing is done in code (no image assets except the icon and launch images, which `make_assets.py` draws; it needs Pillow).
 
+## Versioning and releases
+
+Do not tag or publish by hand. A merge to `main` publishes the `nightly` build; raising `CFBundleShortVersionString` in `Info.plist` plus a `CHANGELOG.md` section publishes a versioned release (see `CONTRIBUTING.md`). Note user-visible changes in `CHANGELOG.md`.
+
 ## Before you finish
 
 Say how you checked the change: which tests, simulator and/or a real device. Do not claim a fix works on a device you did not run it on.
