@@ -65,9 +65,17 @@ jobs:
           (cd dist && shasum -a 256 "$APP-nightly.ipa" > "$APP-nightly.ipa.sha256")
           printf 'Latest build of `main` (version %s, build %s, commit %s). Not a stable release.\n\n%s\n' \
             "$VER" "$GITHUB_RUN_NUMBER" "$SHORT" "${INSTALL//FILE/$APP-nightly.ipa}" > dist/nightly.md
-          gh release delete nightly --cleanup-tag --yes || true
-          gh release create nightly "dist/$APP-nightly.ipa" "dist/$APP-nightly.ipa.sha256" \
-            --target "$GITHUB_SHA" --prerelease --title "Latest build ($SHORT)" --notes-file dist/nightly.md
+          # Update the release in place (not delete and recreate) so it keeps its old date and never pushes
+          # the versioned releases down the list or out of the repository sidebar.
+          if gh release view nightly >/dev/null 2>&1; then
+            git tag -f nightly "$GITHUB_SHA"
+            git push -f origin refs/tags/nightly
+            gh release upload nightly "dist/$APP-nightly.ipa" "dist/$APP-nightly.ipa.sha256" --clobber
+            gh release edit nightly --title "Latest build ($SHORT)" --notes-file dist/nightly.md --prerelease
+          else
+            gh release create nightly "dist/$APP-nightly.ipa" "dist/$APP-nightly.ipa.sha256" \
+              --target "$GITHUB_SHA" --prerelease --title "Latest build ($SHORT)" --notes-file dist/nightly.md
+          fi
 
           # Versioned release, once per version.
           TAG="v$VER"
@@ -80,6 +88,6 @@ jobs:
           awk -v v="$VER" '$0 ~ "^## \\[" v "\\]" {p=1; next} /^## \[/ {p=0} p' CHANGELOG.md > dist/notes.md
           [ -s dist/notes.md ] || echo "See CHANGELOG.md." > dist/notes.md
           printf '\n%s\n' "${INSTALL//FILE/$APP-$VER.ipa}" >> dist/notes.md
-          PRE=(); case "$VER" in 0.*|*-*) PRE=(--prerelease);; esac
+          PRE=(); case "$VER" in *-*) PRE=(--prerelease);; esac
           gh release create "$TAG" "dist/$APP-$VER.ipa" "dist/$APP-$VER.ipa.sha256" \
             --target "$GITHUB_SHA" ${PRE[@]+"${PRE[@]}"} --title "$APP $VER" --notes-file dist/notes.md
