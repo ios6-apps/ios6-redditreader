@@ -1,3 +1,5 @@
+<img src="docs/icon.png" width="96" align="right" alt="RedditReader icon">
+
 # RedditReader
 
 A Reddit reader for iPhones that are stuck on iOS 6, with the look of that era: slate navigation bar, leather tab bar, glossy controls.

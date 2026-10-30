@@ -39,3 +39,13 @@ icon(114).save("res/Icon@2x.png")
 launch(320, 480, 1).save("res/Default.png")
 launch(640, 960, 2).save("res/Default@2x.png")
 launch(640, 1136, 2).save("res/Default-568h@2x.png")
+
+# Rounded 512 px copy for the README and GitHub (on the device iOS adds its own rounding and gloss to Icon.png)
+import os
+from PIL import ImageDraw as _ImageDraw
+os.makedirs("docs", exist_ok=True)
+_i = icon(512).convert("RGBA")
+_m = Image.new("L", _i.size, 0)
+_ImageDraw.Draw(_m).rounded_rectangle([0, 0, 511, 511], radius=115, fill=255)
+_i.putalpha(_m)
+_i.save("docs/icon.png")
